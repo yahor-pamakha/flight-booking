@@ -1,0 +1,139 @@
+<div class="confirmation-page">
+  @if (booking(); as confirmedBooking) {
+    <mat-card class="confirmation-card">
+      <div class="success-icon">
+        <mat-icon>check_circle</mat-icon>
+      </div>
+
+      <mat-card-header>
+        <mat-card-title>Booking Confirmed!</mat-card-title>
+        <mat-card-subtitle>Your flight has been successfully booked</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="reference-section">
+          <span class="label">Booking Reference</span>
+          <span class="reference-id">{{ confirmedBooking.referenceId }}</span>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="section">
+          <h3>
+            @if (confirmedBooking.returnFlight) {
+              Outbound Flight
+            } @else {
+              Flight Details
+            }
+          </h3>
+          <div class="flight-details">
+            <div class="detail-row">
+              <span class="label">Date</span>
+              <span class="value">{{ formatDate(confirmedBooking.flight.date) }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Airline</span>
+              <span class="value">{{ confirmedBooking.flight.airline }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Flight Number</span>
+              <span class="value">{{ confirmedBooking.flight.flightNumber }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Route</span>
+              <span class="value">{{ confirmedBooking.flight.source }} → {{ confirmedBooking.flight.destination }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Departure</span>
+              <span class="value">{{ confirmedBooking.flight.departureTime }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Arrival</span>
+              <span class="value">{{ confirmedBooking.flight.arrivalTime }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Duration</span>
+              <span class="value">{{ formatDuration(confirmedBooking.flight.duration) }}</span>
+            </div>
+          </div>
+        </div>
+
+        @if (confirmedBooking.returnFlight; as returnFlight) {
+          <mat-divider></mat-divider>
+
+          <div class="section">
+            <h3>Return Flight</h3>
+            <div class="flight-details">
+              <div class="detail-row">
+                <span class="label">Date</span>
+                <span class="value">{{ formatDate(returnFlight.date) }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Airline</span>
+                <span class="value">{{ returnFlight.airline }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Flight Number</span>
+                <span class="value">{{ returnFlight.flightNumber }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Route</span>
+                <span class="value">{{ returnFlight.source }} → {{ returnFlight.destination }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Departure</span>
+                <span class="value">{{ returnFlight.departureTime }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Arrival</span>
+                <span class="value">{{ returnFlight.arrivalTime }}</span>
+              </div>
+              <div class="detail-row">
+                <span class="label">Duration</span>
+                <span class="value">{{ formatDuration(returnFlight.duration) }}</span>
+              </div>
+            </div>
+          </div>
+        }
+
+        <mat-divider></mat-divider>
+
+        <div class="section">
+          <h3>Passenger Information</h3>
+          <div class="passenger-details">
+            <div class="detail-row">
+              <span class="label">Name</span>
+              <span class="value">{{ confirmedBooking.details.fullName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Email</span>
+              <span class="value">{{ confirmedBooking.details.email }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Contact</span>
+              <span class="value">{{ confirmedBooking.details.contactNumber }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Passengers</span>
+              <span class="value">{{ confirmedBooking.details.numberOfPassengers }}</span>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="total-section">
+          <span class="label">Total Amount Paid</span>
+          <span class="total-amount">€{{ confirmedBooking.totalPrice }}</span>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="onNewSearch()">
+          <mat-icon>search</mat-icon>
+          Search New Flight
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

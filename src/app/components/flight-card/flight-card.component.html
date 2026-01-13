@@ -1,0 +1,103 @@
+<mat-card class="flight-card" [class.round-trip-card]="isRoundTrip()">
+  @if (isRoundTrip() && returnFlight()) {
+    <div class="round-trip-header">
+      <span class="trip-label">Round Trip</span>
+      <span class="total-price">€{{ totalPrice() }} total</span>
+    </div>
+
+    <mat-card-content>
+      <div class="flight-segment">
+        <div class="segment-header">
+          <mat-icon>flight_takeoff</mat-icon>
+          <span>Outbound</span>
+          <span class="date">{{ formatDate(flight().date) }}</span>
+        </div>
+        <div class="segment-info">
+          <span class="airline">{{ flight().airline }} · {{ flight().flightNumber }}</span>
+        </div>
+        <div class="route">
+          <div class="time-city">
+            <span class="time">{{ flight().departureTime }}</span>
+            <span class="city">{{ flight().source }}</span>
+          </div>
+          <div class="flight-path">
+            <mat-icon>arrow_forward</mat-icon>
+            <span class="duration">{{ formatDuration(flight().duration) }}</span>
+          </div>
+          <div class="time-city">
+            <span class="time">{{ flight().arrivalTime }}</span>
+            <span class="city">{{ flight().destination }}</span>
+          </div>
+        </div>
+        <div class="segment-price">€{{ flight().price }}</div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="flight-segment">
+        <div class="segment-header">
+          <mat-icon>flight_land</mat-icon>
+          <span>Return</span>
+          <span class="date">{{ formatDate(returnFlight()!.date) }}</span>
+        </div>
+        <div class="segment-info">
+          <span class="airline">{{ returnFlight()!.airline }} · {{ returnFlight()!.flightNumber }}</span>
+        </div>
+        <div class="route">
+          <div class="time-city">
+            <span class="time">{{ returnFlight()!.departureTime }}</span>
+            <span class="city">{{ returnFlight()!.source }}</span>
+          </div>
+          <div class="flight-path">
+            <mat-icon>arrow_forward</mat-icon>
+            <span class="duration">{{ formatDuration(returnFlight()!.duration) }}</span>
+          </div>
+          <div class="time-city">
+            <span class="time">{{ returnFlight()!.arrivalTime }}</span>
+            <span class="city">{{ returnFlight()!.destination }}</span>
+          </div>
+        </div>
+        <div class="segment-price">€{{ returnFlight()!.price }}</div>
+      </div>
+    </mat-card-content>
+  } @else {
+    <mat-card-header>
+      <mat-card-title>{{ flight().airline }}</mat-card-title>
+      <mat-card-subtitle>{{ flight().flightNumber }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="flight-date">{{ formatDate(flight().date) }}</div>
+      <div class="route">
+        <div class="time-city">
+          <span class="time">{{ flight().departureTime }}</span>
+          <span class="city">{{ flight().source }}</span>
+        </div>
+
+        <div class="flight-path">
+          <mat-icon>flight</mat-icon>
+          <span class="duration">{{ formatDuration(flight().duration) }}</span>
+        </div>
+
+        <div class="time-city">
+          <span class="time">{{ flight().arrivalTime }}</span>
+          <span class="city">{{ flight().destination }}</span>
+        </div>
+      </div>
+
+      <div class="flight-info">
+        <mat-chip-set>
+          <mat-chip highlighted>€{{ flight().price }}</mat-chip>
+          <mat-chip>{{ flight().availableSeats }} seats left</mat-chip>
+        </mat-chip-set>
+      </div>
+    </mat-card-content>
+  }
+
+  <mat-card-actions align="end">
+    <button mat-raised-button color="primary" (click)="onBook()">
+      <mat-icon>book_online</mat-icon>
+      Book
+    </button>
+  </mat-card-actions>
+</mat-card>

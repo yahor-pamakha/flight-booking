@@ -1,0 +1,47 @@
+<mat-card class="filter-sidebar">
+  <mat-card-header>
+    <mat-card-title>Filters</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="filter-section">
+      <h4>Sort By</h4>
+      <mat-radio-group [value]="sortBy()" (change)="onSortChange($event.value)">
+        <mat-radio-button value="price">Price (Low to High)</mat-radio-button>
+        <mat-radio-button value="duration">Duration (Shortest)</mat-radio-button>
+      </mat-radio-group>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="filter-section">
+      <h4>Airlines</h4>
+      <div class="checkbox-list">
+        @for (airline of airlines(); track airline) {
+          <mat-checkbox
+            [checked]="isAirlineSelected(airline)"
+            (change)="onAirlineChange(airline, $event.checked)"
+          >
+            {{ airline }}
+          </mat-checkbox>
+        }
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div class="filter-section">
+      <h4>Departure Time</h4>
+      <div class="checkbox-list">
+        @for (slot of timeSlots; track slot.value) {
+          <mat-checkbox
+            [checked]="isTimeSlotSelected(slot.value)"
+            (change)="onTimeSlotChange(slot.value, $event.checked)"
+          >
+            {{ slot.label }} <small>({{ slot.range }})</small>
+          </mat-checkbox>
+        }
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

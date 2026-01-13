@@ -1,0 +1,116 @@
+<div class="search-page">
+  <mat-card class="search-container">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>flight</mat-icon>
+        Find Your Perfect Flight
+      </mat-card-title>
+      <mat-card-subtitle>Search and book flights to your favorite destinations</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form class="search-form" (ngSubmit)="onSearch()">
+        <div class="form-row cities-row">
+          <mat-form-field appearance="outline">
+            <mat-label>From</mat-label>
+            <input
+              matInput
+              type="text"
+              [value]="sourceInput()"
+              (input)="sourceInput.set($any($event.target).value)"
+              [matAutocomplete]="sourceAuto"
+              placeholder="Select city"
+            />
+            <mat-icon matPrefix>flight_takeoff</mat-icon>
+            <mat-autocomplete #sourceAuto="matAutocomplete" (optionSelected)="onSourceSelected($event.option.value)">
+              @for (city of filteredSourceCities; track city) {
+                <mat-option [value]="city">{{ city }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <button
+            mat-icon-button
+            type="button"
+            class="swap-btn"
+            (click)="swapCities()"
+            [disabled]="!source() && !destination()"
+            matTooltip="Swap cities"
+          >
+            <mat-icon>swap_horiz</mat-icon>
+          </button>
+
+          <mat-form-field appearance="outline">
+            <mat-label>To</mat-label>
+            <input
+              matInput
+              type="text"
+              [value]="destinationInput()"
+              (input)="destinationInput.set($any($event.target).value)"
+              [matAutocomplete]="destAuto"
+              placeholder="Select city"
+            />
+            <mat-icon matPrefix>flight_land</mat-icon>
+            <mat-autocomplete #destAuto="matAutocomplete" (optionSelected)="onDestinationSelected($event.option.value)">
+              @for (city of filteredDestinationCities; track city) {
+                <mat-option [value]="city">{{ city }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Departure Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="departurePicker"
+              [value]="departureDate()"
+              (dateChange)="departureDate.set($event.value)"
+              [min]="minDate"
+            />
+            <mat-datepicker-toggle matIconSuffix [for]="departurePicker"></mat-datepicker-toggle>
+            <mat-datepicker #departurePicker></mat-datepicker>
+          </mat-form-field>
+
+          <div class="checkbox-container">
+            <mat-checkbox
+              [checked]="isRoundTrip()"
+              (change)="onRoundTripChange($event.checked)"
+            >
+              Round Trip
+            </mat-checkbox>
+          </div>
+        </div>
+
+        @if (isRoundTrip()) {
+          <div class="form-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Return Date</mat-label>
+              <input
+                matInput
+                [matDatepicker]="returnPicker"
+                [value]="returnDate()"
+                (dateChange)="returnDate.set($event.value)"
+                [min]="departureDate() || minDate"
+              />
+              <mat-datepicker-toggle matIconSuffix [for]="returnPicker"></mat-datepicker-toggle>
+              <mat-datepicker #returnPicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+        }
+
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="search-btn"
+          [disabled]="!source() || !destination() || !departureDate()"
+        >
+          <mat-icon>search</mat-icon>
+          Search Flights
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

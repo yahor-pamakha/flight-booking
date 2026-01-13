@@ -1,0 +1,72 @@
+<div class="results-page">
+  <header class="results-header">
+    <button mat-button (click)="onBackToSearch()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Search
+    </button>
+    <h1>Available Flights</h1>
+    @if (isRoundTrip()) {
+      <p>{{ roundTripFlights().length }} round trip combinations found</p>
+    } @else {
+      <p>{{ flights().length }} flights found</p>
+    }
+  </header>
+
+  <div class="results-content">
+    @if (hasSearchResults()) {
+      <app-filter-sidebar
+        [airlines]="airlines()"
+        [currentFilters]="currentFilters()"
+        (filtersChange)="onFiltersChange($event)"
+      />
+
+      @if (isRoundTrip()) {
+        @if (roundTripFlights().length > 0) {
+          <div class="flights-list">
+            @for (roundTrip of roundTripFlights(); track roundTrip.outbound.id + roundTrip.return.id) {
+              <app-flight-card
+                [flight]="roundTrip.outbound"
+                [returnFlight]="roundTrip.return"
+                [isRoundTrip]="true"
+                (bookFlight)="onBookRoundTrip(roundTrip)"
+              />
+            }
+          </div>
+        } @else {
+          <div class="no-results-filtered">
+            <mat-icon>filter_alt_off</mat-icon>
+            <h3>No flights match your filters</h3>
+            <p>Try removing some filters to see more results</p>
+          </div>
+        }
+      } @else {
+        @if (flights().length > 0) {
+          <div class="flights-list">
+            @for (flight of flights(); track flight.id) {
+              <app-flight-card
+                [flight]="flight"
+                (bookFlight)="onBookFlight($event)"
+              />
+            }
+          </div>
+        } @else {
+          <div class="no-results-filtered">
+            <mat-icon>filter_alt_off</mat-icon>
+            <h3>No flights match your filters</h3>
+            <p>Try removing some filters to see more results</p>
+          </div>
+        }
+      }
+    } @else {
+      <div class="no-results">
+        <mat-icon class="no-results-icon">flight_off</mat-icon>
+        <h2>No flights found</h2>
+        <p>Try adjusting your search criteria</p>
+        <button mat-raised-button color="primary" (click)="onBackToSearch()">
+          <mat-icon>search</mat-icon>
+          Search Again
+        </button>
+      </div>
+    }
+  </div>
+</div>

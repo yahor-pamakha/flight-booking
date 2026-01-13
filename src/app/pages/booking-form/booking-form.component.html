@@ -1,0 +1,160 @@
+<div class="booking-page">
+  @if (flight(); as selectedFlight) {
+    <div class="booking-container">
+      <mat-card class="flight-summary">
+        <mat-card-header>
+          <mat-card-title>Flight Summary</mat-card-title>
+          @if (isRoundTrip()) {
+            <mat-card-subtitle>Round Trip</mat-card-subtitle>
+          }
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flight-info">
+            <div class="segment-label">
+              <mat-icon>flight_takeoff</mat-icon>
+              <span>Outbound</span>
+              <span class="date">{{ formatDate(selectedFlight.date) }}</span>
+            </div>
+            <div class="airline">
+              <strong>{{ selectedFlight.airline }}</strong>
+              <span>{{ selectedFlight.flightNumber }}</span>
+            </div>
+            <div class="route">
+              <div class="departure">
+                <span class="time">{{ selectedFlight.departureTime }}</span>
+                <span class="city">{{ selectedFlight.source }}</span>
+              </div>
+              <div class="arrow">
+                <mat-icon>arrow_forward</mat-icon>
+                <span class="duration">{{ formatDuration(selectedFlight.duration) }}</span>
+              </div>
+              <div class="arrival">
+                <span class="time">{{ selectedFlight.arrivalTime }}</span>
+                <span class="city">{{ selectedFlight.destination }}</span>
+              </div>
+            </div>
+            <div class="price">
+              <span class="label">Price:</span>
+              <span class="amount">€{{ selectedFlight.price }}</span>
+            </div>
+
+            @if (isRoundTrip() && returnFlight(); as retFlight) {
+              <mat-divider></mat-divider>
+
+              <div class="segment-label">
+                <mat-icon>flight_land</mat-icon>
+                <span>Return</span>
+                <span class="date">{{ formatDate(retFlight.date) }}</span>
+              </div>
+              <div class="airline">
+                <strong>{{ retFlight.airline }}</strong>
+                <span>{{ retFlight.flightNumber }}</span>
+              </div>
+              <div class="route">
+                <div class="departure">
+                  <span class="time">{{ retFlight.departureTime }}</span>
+                  <span class="city">{{ retFlight.source }}</span>
+                </div>
+                <div class="arrow">
+                  <mat-icon>arrow_forward</mat-icon>
+                  <span class="duration">{{ formatDuration(retFlight.duration) }}</span>
+                </div>
+                <div class="arrival">
+                  <span class="time">{{ retFlight.arrivalTime }}</span>
+                  <span class="city">{{ retFlight.destination }}</span>
+                </div>
+              </div>
+              <div class="price">
+                <span class="label">Price:</span>
+                <span class="amount">€{{ retFlight.price }}</span>
+              </div>
+
+              <mat-divider></mat-divider>
+
+              <div class="total-flight-price">
+                <span class="label">Total per person:</span>
+                <span class="amount">€{{ selectedFlight.price + retFlight.price }}</span>
+              </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="booking-form-card">
+        <mat-card-header>
+          <mat-card-title>Passenger Details</mat-card-title>
+          <mat-card-subtitle>Please fill in the booking information</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
+            <mat-form-field appearance="outline">
+              <mat-label>Full Name</mat-label>
+              <input matInput formControlName="fullName" placeholder="Enter your full name" />
+              <mat-icon matPrefix>person</mat-icon>
+              @if (bookingForm.get('fullName')?.hasError('required') && bookingForm.get('fullName')?.touched) {
+                <mat-error>Full name is required</mat-error>
+              }
+              @if (bookingForm.get('fullName')?.hasError('minlength') && bookingForm.get('fullName')?.touched) {
+                <mat-error>Name must be at least 2 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" type="email" placeholder="Enter your email" />
+              <mat-icon matPrefix>email</mat-icon>
+              @if (bookingForm.get('email')?.hasError('required') && bookingForm.get('email')?.touched) {
+                <mat-error>Email is required</mat-error>
+              }
+              @if (bookingForm.get('email')?.hasError('email') && bookingForm.get('email')?.touched) {
+                <mat-error>Please enter a valid email</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Contact Number</mat-label>
+              <input matInput formControlName="contactNumber" placeholder="+1 234 567 8900" />
+              <mat-icon matPrefix>phone</mat-icon>
+              @if (bookingForm.get('contactNumber')?.hasError('required') && bookingForm.get('contactNumber')?.touched) {
+                <mat-error>Contact number is required</mat-error>
+              }
+              @if (bookingForm.get('contactNumber')?.hasError('pattern') && bookingForm.get('contactNumber')?.touched) {
+                <mat-error>Please enter a valid phone number</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Number of Passengers</mat-label>
+              <input matInput formControlName="numberOfPassengers" type="number" min="1" max="9" />
+              <mat-icon matPrefix>group</mat-icon>
+              @if (bookingForm.get('numberOfPassengers')?.hasError('required') && bookingForm.get('numberOfPassengers')?.touched) {
+                <mat-error>Number of passengers is required</mat-error>
+              }
+              @if (bookingForm.get('numberOfPassengers')?.hasError('min') && bookingForm.get('numberOfPassengers')?.touched) {
+                <mat-error>At least 1 passenger required</mat-error>
+              }
+              @if (bookingForm.get('numberOfPassengers')?.hasError('max') && bookingForm.get('numberOfPassengers')?.touched) {
+                <mat-error>Maximum 9 passengers allowed</mat-error>
+              }
+            </mat-form-field>
+
+            <div class="total-price">
+              <span class="label">Total Price:</span>
+              <span class="amount">€{{ totalPrice }}</span>
+            </div>
+
+            <div class="form-actions">
+              <button mat-button type="button" (click)="onCancel()">
+                Cancel
+              </button>
+              <button mat-raised-button color="primary" type="submit">
+                <mat-icon>check</mat-icon>
+                Confirm Booking
+              </button>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+</div>

@@ -1,0 +1,34 @@
+.filter-sidebar {
+  height: fit-content;
+  position: sticky;
+  top: 1rem;
+}
+
+.filter-section {
+  padding: 1rem 0;
+
+  h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  mat-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  small {
+    color: rgba(0, 0, 0, 0.6);
+  }
+}
